@@ -35,6 +35,11 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
+                        @if(in_array($user->role, ['employer']))
+                        <a href="{{ route('admin.impersonate', $user->id) }}" class="btn btn-sm btn-outline-primary mt-1">
+                            Impersonate
+                        </a>
+                    @endif
                     </td>
                 </tr>
             @endforeach

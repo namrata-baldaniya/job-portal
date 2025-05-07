@@ -32,34 +32,46 @@
                             </a>
                         </div>
 
-                        @if($resume->skills)
+                        @if(!empty($resume->skills))
                         <div class="mb-4">
                             <h6>Skills</h6>
                             <div class="border p-3 bg-light rounded">
-                                {!! nl2br(e($resume->skills)) !!}
+                                @if(is_array($resume->skills))
+                                    {{ implode(', ', $resume->skills) }}
+                                @else
+                                    {!! nl2br(e($resume->skills)) !!}
+                                @endif
                             </div>
                         </div>
+                        
                         @endif
 
-                        @if($resume->experience)
+                        @if(!empty($resume->experience))
                         <div class="mb-4">
                             <h6>Experience</h6>
                             <div class="border p-3 bg-light rounded">
-                                {!! nl2br(e($resume->experience)) !!}
+                                @if(is_array($resume->experience))
+                                    {{ implode("\n", $resume->experience) }}
+                                @else
+                                    {!! nl2br(e($resume->experience)) !!}
+                                @endif
                             </div>
                         </div>
                         @endif
 
-                        @if($resume->education)
+                        @if(!empty($resume->education))
                         <div class="mb-4">
                             <h6>Education</h6>
                             <div class="border p-3 bg-light rounded">
-                                {!! nl2br(e($resume->education)) !!}
+                                @if(is_array($resume->education))
+                                    {{ implode("\n", $resume->education) }}
+                                @else
+                                    {!! nl2br(e($resume->education)) !!}
+                                @endif
                             </div>
                         </div>
                         @endif
 
-                       
                     @else
                         <div class="alert alert-warning">
                             You haven't uploaded a resume yet.

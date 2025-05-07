@@ -12,6 +12,7 @@ use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboardCont
 use App\Http\Controllers\JobSeeker\JobController;
 use App\Http\Controllers\JobSeeker\ResumeController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,7 +47,30 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('users.edit');
     Route::put('users/{user}', [AdminController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('/impersonate/{user}', function (\App\Models\User $user) {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('dashboard')->with('error', 'Unauthorized action.');
+        }
+
+        Auth::user()->impersonate($user);
+        
+        if ($user->role == 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role == 'employer') {
+            return redirect()->route('employer.dashboard');
+        } elseif ($user->role == 'jobseeker') {
+            return redirect()->route('jobseeker.dashboard');
+        }
+
+        return redirect('/admin/dashboard');
+    })->name('impersonate');
+    Route::get('/impersonate/stop', function (App\Models\User $user) {
+        Auth::user()->stopImpersonating();
+        return redirect()->route('admin.dashboard');
+    })->name('stopImpersonate');    
 });
+
 
 Route::get('/', function () {
     return view('welcome');

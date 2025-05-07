@@ -6,13 +6,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\JobPost; 
+use App\Models\JobPost;
+use Illuminate\Support\Facades\Auth;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
+    /**
+ * @method void impersonate(\Illuminate\Foundation\Auth\User $user)
+ * @method void stopImpersonating()
+ */
+    use HasFactory, Notifiable,Impersonate;
     /**
      * The attributes that are mass assignable.
      *
@@ -80,5 +85,21 @@ class User extends Authenticatable
     public function isJobSeeker()
     {
         return $this->role === 'jobseeker';
+    }
+    public function impersonate(User $user)
+    {
+        session(['impersonate' => $user->id]);
+        Auth::login($user);
+    }
+
+    public function stopImpersonating()
+    {
+        session()->forget('impersonate');
+        Auth::loginUsingId(Auth::user()->id);
+    }
+
+    public function isImpersonating()
+    {
+        return session()->has('impersonate');
     }
 }

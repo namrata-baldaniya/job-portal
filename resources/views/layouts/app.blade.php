@@ -31,6 +31,13 @@
 
             <a class="navbar-brand" href="{{ $dashboardRoute }}">Dashboard</a>
 
+            <!-- @auth -->
+            <!-- @if (Auth::user()->isImpersonating())
+                <a href="" class="btn btn-danger">
+                    Stop Impersonating
+                </a>
+            @endif
+        @endauth -->
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav">
                     @if(auth()->check())

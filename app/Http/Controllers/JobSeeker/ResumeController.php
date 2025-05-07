@@ -47,9 +47,9 @@ class ResumeController extends Controller
 
         $user->resume()->create([
             'file_path' => $filePath,
-            'skills' => $request->skills,
-            'experience' => $request->experience,
-            'education' => $request->education,
+            'skills' => is_array($request->skills) ? implode("\n", $request->skills) : $request->skills,
+            'experience' => is_array($request->experience) ? implode("\n", $request->experience) : $request->experience,
+            'education' => is_array($request->education) ? implode("\n", $request->education) : $request->education,
         ]);
 
         return redirect()->route('jobseeker.resume.index')
@@ -90,7 +90,9 @@ class ResumeController extends Controller
         $data = [
             'skills' => $request->skills,
             'experience' => $request->experience,
-            'education' => $request->education,
+            'education' => $request->education,'skills' => is_array($request->skills) ? implode("\n", $request->skills) : $request->skills,
+            'experience' => is_array($request->experience) ? implode("\n", $request->experience) : $request->experience,
+            'education' => is_array($request->education) ? implode("\n", $request->education) : $request->education,
         ];
 
         if ($request->hasFile('resume_file')) {
