@@ -15,16 +15,20 @@ class ApplicationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $applications = Application::whereIn('job_post_id', 
-            Auth::user()->jobPosts->pluck('id'))
-            ->with(['jobPost', 'user'])
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'all');
 
-    return view('employer.applications.index', compact('applications'));
-    
+        $query = Application::whereIn('job_post_id', Auth::user()->jobPosts->pluck('id'))
+                            ->with(['jobPost', 'user']);
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $applications = $query->get();
+
+        return view('employer.applications.index', compact('applications'));
     }
 
     /**
@@ -67,6 +71,21 @@ class ApplicationController extends Controller
     public function update(Request $request, string $id)
     {
         //
+    }
+    public function updateStatus(Request $request, Application $application)
+    {
+        $this->authorize('update', $application);
+
+        $validated = $request->validate([
+            'status' => 'required|in:pending,accepted,rejected',
+            'feedback' => 'nullable|string',
+            'interview_date' => 'nullable|date|after:now',
+            'interview_notes' => 'nullable|string'
+        ]);
+
+        $application->update($validated);
+
+        return back()->with('success', 'Application status updated successfully!');
     }
 
     /**

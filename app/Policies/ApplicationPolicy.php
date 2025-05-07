@@ -19,9 +19,16 @@ class ApplicationPolicy
     /**
      * Determine whether the user can view the model.
      */
+    // public function view(User $user, Application $application)
+    // {
+    //     return $user->id === $application->user_id;
+    // }
     public function view(User $user, Application $application)
     {
-        return $user->id === $application->user_id;
+        return $user->id === $application->user_id || 
+               $user->id === $application->jobPost->user_id
+            ? Response::allow()
+            : Response::deny('You are not authorized to view this application.');
     }
     /**
      * Determine whether the user can create models.
@@ -34,11 +41,12 @@ class ApplicationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Application $application): bool
+    public function update(User $user, Application $application)
     {
-        return false;
+        return $user->id === $application->jobPost->user_id
+            ? Response::allow()
+            : Response::deny('You are not authorized to update this application.');
     }
-
     /**
      * Determine whether the user can delete the model.
      */

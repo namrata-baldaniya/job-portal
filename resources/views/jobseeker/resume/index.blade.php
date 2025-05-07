@@ -9,7 +9,7 @@
                     <h5 class="mb-0">My Resume</h5>
                     @if($resume)
                         <div>
-                            <a href="{{ route('jobseeker.resume.edit') }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('jobseeker.resume.edit', $resume->id) }}" class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                         </div>
@@ -59,14 +59,7 @@
                         </div>
                         @endif
 
-                        <form action="{{ route('jobseeker.resume.destroy') }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" 
-                                    onclick="return confirm('Are you sure you want to delete your resume?')">
-                                <i class="fas fa-trash"></i> Delete Resume
-                            </button>
-                        </form>
+                       
                     @else
                         <div class="alert alert-warning">
                             You haven't uploaded a resume yet.

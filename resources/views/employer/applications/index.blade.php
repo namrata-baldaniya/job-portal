@@ -65,9 +65,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">
-                {{ $applications->links() }}
-            </div>
         </div>
     </div>
 </div>

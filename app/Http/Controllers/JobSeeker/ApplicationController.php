@@ -29,24 +29,42 @@ class ApplicationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(JobPost $jobPost)
     {
-        if (!Auth::user()->resume) {
-            return redirect()->route('jobseeker.resume.create')
-                ->with('warning', 'Please upload your resume before applying for jobs.');
-        }
+        
+    if (!Auth::user()->resume) {
+        return redirect()->route('jobseeker.resume.create')
+            ->with('warning', 'Please upload your resume before applying for jobs.');
+    }
 
-        return view('jobseeker.applications.create', compact('jobPost'));
+    $existingApplication = Application::where('user_id', Auth::id())
+        ->where('job_post_id', $jobPost->id)
+        ->first();
+
+    if ($existingApplication) {
+        return redirect()->route('jobseeker.applications.show', $existingApplication)
+            ->with('info', 'You have already applied for this position.');
+    }
+
+    return view('jobseeker.applications.create', compact('jobPost'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, JobPost $jobPost)
-    {
-        $request->validate([
-            'cover_letter' => 'required|string',
+    {    $request->validate([
+            'cover_letter' => 'required|string|min:100',
         ]);
+
+        $existingApplication = Application::where('user_id', Auth::id())
+            ->where('job_post_id', $jobPost->id)
+            ->first();
+
+        if ($existingApplication) {
+            return redirect()->route('jobseeker.applications.show', $existingApplication)
+                ->with('info', 'You have already applied for this position.');
+    }
 
         Application::create([
             'job_post_id' => $jobPost->id,

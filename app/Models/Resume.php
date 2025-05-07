@@ -9,6 +9,7 @@ class Resume extends Model
 {
     use HasFactory;
 
+    protected $table = 'resumes';
     protected $fillable = [
         'user_id',
         'file_path',

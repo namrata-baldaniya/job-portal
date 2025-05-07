@@ -8,7 +8,8 @@
                 <div class="card-header">Edit Resume</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('jobseeker.resume.update') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('jobseeker.resume.update') ,['resume' => $resume->id]}}" enctype="multipart/form-data">
+                        
                         @csrf
                         @method('PUT')
 

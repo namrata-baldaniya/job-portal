@@ -14,7 +14,22 @@
 <body style="background-color: #f4f7fc;">
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">Job Portal</a>
+            @php
+                $dashboardRoute = '#';
+                if (auth()->check()) {
+                    $role = auth()->user()->role;
+
+                    if ($role === 'admin') {
+                        $dashboardRoute = route('admin.dashboard');
+                    } elseif ($role === 'employer') {
+                        $dashboardRoute = route('employer.dashboard');
+                    } elseif ($role === 'jobseeker') {
+                        $dashboardRoute = route('jobseeker.dashboard');
+                    }
+                }
+            @endphp
+
+            <a class="navbar-brand" href="{{ $dashboardRoute }}">Dashboard</a>
 
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav">

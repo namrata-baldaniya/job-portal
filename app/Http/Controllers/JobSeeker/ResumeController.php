@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\JobSeeker;
 
 use App\Http\Controllers\Controller;
+use App\Models\Resume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -108,7 +109,7 @@ class ResumeController extends Controller
      */
     public function destroy(string $id)
     {
-        $resume = Auth::user()->resume;
+        $resume = Resume::findOrFail($id);
         Storage::delete($resume->file_path);
         $resume->delete();
 

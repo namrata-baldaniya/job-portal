@@ -18,6 +18,10 @@ class Application extends Model
         'interview_date'
     ];
     
+    protected $casts = [
+        'interview_date' => 'datetime',
+    ];
+
     public function jobPost()
     {
         return $this->belongsTo(JobPost::class);
@@ -26,5 +30,19 @@ class Application extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeAccepted($query)
+    {
+        return $query->where('status', 'accepted');
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
     }
 }

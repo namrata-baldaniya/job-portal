@@ -37,10 +37,15 @@ Route::middleware('auth')->get('/dashboard', function () {
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
 
-Route::middleware(['auth', 'is_jobseeker'])->prefix('jobseeker')->name('jobseeker.')->group(function () {
-    Route::get('/dashboard', [JobSeekerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('jobs/pending', [DashboardController::class, 'pending'])->name('jobs.pending');
+
+    Route::put('jobs/{job}/approve', [DashboardController::class, 'approve'])->name('jobs.approve');
+    Route::put('jobs/{job}/reject', [DashboardController::class, 'reject'])->name('jobs.reject');
+    Route::get('users', [AdminController::class, 'index'])->name('users.index');
+    Route::get('users/{user}/edit', [AdminController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}', [AdminController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::get('/', function () {
@@ -58,6 +63,9 @@ Route::middleware(['auth', 'is_employer'])->prefix('employer')->name('employer.'
     Route::put('applications/{application}', [\App\Http\Controllers\Employer\ApplicationController::class, 'update'])
         ->name('applications.update');
 
+        Route::put('applications/{application}/status', [\App\Http\Controllers\Employer\ApplicationController::class, 'updateStatus'])
+        ->name('applications.update-status');
+
     Route::get('company_profile', [\App\Http\Controllers\Employer\CompanyProfileController::class, 'edit'])
         ->name('company_profile.edit');
     Route::put('company_profile', [\App\Http\Controllers\Employer\CompanyProfileController::class, 'update'])
@@ -65,15 +73,24 @@ Route::middleware(['auth', 'is_employer'])->prefix('employer')->name('employer.'
 });
 Route::middleware(['auth', 'is_jobseeker'])->prefix('jobseeker')->name('jobseeker.')->group(function () {
     Route::get('/dashboard', [JobSeekerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/resume', [ResumeController::class, 'index'])->name('resume.index');
+    Route::get('/resume/create', [ResumeController::class, 'create'])->name('resume.create');
+    Route::post('/resume', [ResumeController::class, 'store'])->name('resume.store');
+    Route::get('/resume/{id}/edit', [ResumeController::class, 'edit'])->name('resume.edit');
+    Route::put('/resume', [ResumeController::class, 'update'])->name('resume.update');
+    Route::delete('/resume', [ResumeController::class, 'destroy'])->name('resume.destroy');
+
     
-    Route::resource('resume', ResumeController::class)->only([
-        'index', 'create', 'store', 'edit', 'update', 'destroy'
-    ]);
+    Route::get('applications', [ApplicationController::class, 'index'])
+        ->name('applications.index');
+    Route::get('applications/{application}', [ApplicationController::class, 'show'])
+        ->name('applications.show');
+    Route::get('jobs/{jobPost}/apply', [ApplicationController::class, 'create'])
+        ->name('applications.create');
+    Route::post('jobs/{jobPost}/apply', [ApplicationController::class, 'store'])
+        ->name('applications.store');
     
-    Route::resource('applications', ApplicationController::class)->only([
-        'index', 'create', 'store', 'show'
-    ]);
-    
-    Route::get('jobs', [JobController::class, 'index'])->name('jobs.index');
+    Route::get('jobs', [JobController::class, 'index'])
+        ->name('jobs.index');
     Route::get('jobs/{jobPost}', [JobController::class, 'show'])->name('jobs.show');
 });
