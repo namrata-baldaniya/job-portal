@@ -69,6 +69,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
         Auth::user()->stopImpersonating();
         return redirect()->route('admin.dashboard');
     })->name('stopImpersonate');    
+    Route::get('/admin/activity-logs', [DashboardController::class, 'activityLogs'])->name('activity.logs');
 });
 
 

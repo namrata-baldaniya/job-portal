@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\JobPost;
 use App\Models\User;
 
@@ -41,5 +42,10 @@ class DashboardController extends Controller
         $job->save();
 
         return redirect()->route('admin.jobs.pending')->with('status', 'Job rejected successfully!');
+    }
+    public function activityLogs()
+    {
+        $logs = ActivityLog::with('user')->latest()->get();
+        return view('admin.activity_logs.index', compact('logs'));
     }
 }

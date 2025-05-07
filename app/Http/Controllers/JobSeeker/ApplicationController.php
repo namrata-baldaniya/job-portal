@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\JobSeeker;
 
 use App\Http\Controllers\Controller;
+use App\LogsActivity;
 use App\Models\Application;
 use App\Models\JobPost;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests,LogsActivity;
 
     /**
      * Display a listing of the resource.
@@ -71,6 +72,8 @@ class ApplicationController extends Controller
             'user_id' => Auth::id(),
             'cover_letter' => $request->cover_letter,
         ]);
+
+        $this->logActivity('Applied to Job', "Job ID: {$jobPost->id} | Title: {$jobPost->title}");
 
         return redirect()->route('jobseeker.applications.index')
             ->with('success', 'Application submitted successfully!');

@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Employer;
 
 use App\Models\JobPost;
 use App\Http\Controllers\Controller;
+use App\LogsActivity;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class JobPostController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests,LogsActivity;
     /**
      * Display a listing of the resource.
      */
@@ -56,6 +57,7 @@ class JobPostController extends Controller
         $user->load(['jobPosts', 'companyProfile']);
         $user->jobPosts()->create($validated);
 
+        $this->logActivity('Created Job Post', "Title: {$validated['title']}");
         return redirect()->route('employer.job_posts.index')
             ->with('success', 'Job post created successfully!');
     }
@@ -97,6 +99,7 @@ class JobPostController extends Controller
 
         $jobPost->update($validated);
 
+        $this->logActivity('Updated Job Post', "Title: {$validated['title']}");
         return redirect()->route('employer.job_posts.index')
             ->with('success', 'Job post updated successfully!');
     }
@@ -108,6 +111,7 @@ class JobPostController extends Controller
     {
         $this->authorize('delete', $jobPost);
         $jobPost->delete();
+        $this->logActivity('Deleted Job Post', "Title: {$jobPost->title}");
         return redirect()->route('employer.job_posts.index')
             ->with('success', 'Job post deleted successfully!');
     }
