@@ -11,30 +11,41 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            $user = Auth::user();
-    
-            return redirect()->route('dashboard');
+            return $this->redirectToDashboard();
         }
     
         return view('auth.login');
     }
     
-
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-
-            $user = Auth::user();
-            return redirect()->route('dashboard');
+            return $this->redirectToDashboard();
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials']);
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+    
+    protected function redirectToDashboard()
+    {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'employer') {
+            return redirect()->route('employer.dashboard');
+        } elseif ($user->role === 'jobseeker') {
+            return redirect()->route('jobseeker.dashboard');
+        }
+
+        return redirect('/home');
     }
 
     public function logout(Request $request)

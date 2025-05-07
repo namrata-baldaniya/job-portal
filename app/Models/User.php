@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\JobPost; 
 
 class User extends Authenticatable
 {
@@ -45,5 +46,39 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function companyProfile()
+    {
+        return $this->hasOne(CompanyProfile::class);
+    }
+
+    public function jobPosts()
+    {
+        return $this->hasMany(JobPost::class);
+    }
+    
+
+    public function resume()
+    {
+        return $this->hasOne(Resume::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isEmployer()
+    {
+        return $this->role === 'employer';
+    }
+
+    public function isJobSeeker()
+    {
+        return $this->role === 'jobseeker';
     }
 }

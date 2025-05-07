@@ -4,90 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            color: black;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        nav ul li a:hover {
-            text-decoration: underline;
-        }
-
-        nav ul li form button {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        nav ul li form button:hover {
-            background-color: #d32f2f;
-        }
-
-        .logout-btn {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-        }
-        .dashboard-btn{
-
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <nav>
-                <ul>
-                    <li class="dashboard-btn"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    
+<body style="background-color: #f4f7fc;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('dashboard') }}">Job Portal</a>
+
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
                     @if(auth()->check())
-                        <li class="logout-btn">
-                            <form action="{{ route('logout') }}" method="POST">
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                 @csrf
-                                <button type="submit" class="btn btn-danger">Logout</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
                             </form>
                         </li>
                     @else
-                        <li><a href="{{ route('login') }}">Login</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
                     @endif
                 </ul>
-            </nav>
-        </header>
+            </div>
+        </div>
+    </nav>
 
-        <main>
-            @yield('content')
-        </main>
-    </div>
+    <main class="container py-4">
+        @yield('content')
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
