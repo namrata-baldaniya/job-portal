@@ -1,36 +1,93 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal</title>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        nav ul li a {
+            color: black;
+            text-decoration: none;
+            font-size: 16px;
+        }
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        nav ul li form button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        nav ul li form button:hover {
+            background-color: #d32f2f;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .dashboard-btn{
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li class="dashboard-btn"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    
+                    @if(auth()->check())
+                        <li class="logout-btn">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-danger">Logout</button>
+                            </form>
+                        </li>
+                    @else
+                        <li><a href="{{ route('login') }}">Login</a></li>
+                    @endif
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            @yield('content')
+        </main>
+    </div>
+</body>
 </html>
