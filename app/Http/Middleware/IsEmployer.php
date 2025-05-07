@@ -16,10 +16,13 @@ class IsEmployer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'employer') {
-            return $next($request);
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
-    
-        abort(403, 'Unauthorized');
+
+        if (Auth::user()->role !== 'employer') {
+            abort(403, 'Unauthorized');
+        }
+        return $next($request);
     }
 }

@@ -16,11 +16,15 @@ class IsJobSeeker
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'jobseeker') {
-            return $next($request);
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
-    
-        abort(403, 'Unauthorized');
+
+        if (Auth::user()->role !== 'jobseeker') {
+            abort(403, 'Unauthorized');
+        }
+
+        return $next($request);
     }
 }
 

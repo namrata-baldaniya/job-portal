@@ -17,6 +17,7 @@ class DashboardController extends Controller
          /** @var \App\Models\User $user */
          $user = Auth::user();
          $user->load(['applications']);
+         $notifications = $user->unreadNotifications; 
         $stats = [
             'applications' => $user->applications()->count(),
             'pending' => $user->applications()->where('status', 'pending')->count(),
@@ -30,7 +31,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('jobseeker.dashboard', compact('stats', 'recentApplications'));
+        return view('jobseeker.dashboard', compact('stats', 'recentApplications','notifications'));
     
     }
 }

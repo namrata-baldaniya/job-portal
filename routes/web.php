@@ -11,6 +11,7 @@ use App\Http\Controllers\JobSeeker\ApplicationController;
 use App\Http\Controllers\JobSeeker\DashboardController as JobSeekerDashboardController;
 use App\Http\Controllers\JobSeeker\JobController;
 use App\Http\Controllers\JobSeeker\ResumeController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -118,4 +119,15 @@ Route::middleware(['auth', 'is_jobseeker'])->prefix('jobseeker')->name('jobseeke
     Route::get('jobs', [JobController::class, 'index'])
         ->name('jobs.index');
     Route::get('jobs/{jobPost}', [JobController::class, 'show'])->name('jobs.show');
+    Route::get('/jobseeker/dashboard', [JobSeekerDashboardController::class, 'index'])->name('jobseeker.dashboard');
+    Route::get('notifications/{notification}', [NotificationsController::class, 'show'])->name('notifications.show');
+    Route::delete('/jobseeker/notifications/{notification}', [NotificationsController::class, 'destroy'])->name('notifications.delete');
+
+});
+Route::get('/test-mail', function () {
+    \Mail::raw('Test Mailtrap email!', function ($message) {
+        $message->to('your@email.com')
+                ->subject('Testing Mailtrap');
+    });
+    return 'Mail sent!';
 });

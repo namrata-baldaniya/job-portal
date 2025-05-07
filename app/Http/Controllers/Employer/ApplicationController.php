@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Notifications\ApplicationStatusChange;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,7 @@ class ApplicationController extends Controller
 
         $application->update($validated);
 
+        $application->user->notify(new ApplicationStatusChange($application));
         return back()->with('success', 'Application status updated successfully!');
     }
 
